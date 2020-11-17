@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.llol.dao.MemberMapper">
+    <insert id="insertMember" parameterType="com.project.llol.dto.MemberDTO">
+        <![CDATA[ INSERT INTO member VALUES(#{id}, #{password}, #{name}) ]]>
+    </insert>
+    <select id="getMember" parameterType="com.project.llol.dto.MemberDTO" resultType="com.project.llol.dto.MemberDTO">
+        <![CDATA[ SELECT * FROM member WHERE id = #{id} ]]>
+    </select>
+    <select id="checkMember" parameterType="com.project.llol.dto.MemberDTO" resultType="int">
+        <![CDATA[ SELECT count(*) FROM member WHERE id = #{id} ]]>
+    </select>
+</mapper>
