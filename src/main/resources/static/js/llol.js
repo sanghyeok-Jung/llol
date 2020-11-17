@@ -151,3 +151,27 @@ function signUp() {
         $("#checkResultId").text("아이디를 입력히세요.");
     }
 }
+
+function updateMember() {
+    var form = document.updateMemberForm;
+
+    var password1 = $("#Password1").val();
+    var password2 = $("#Password2").val();
+    var name = $("#InputName").val();
+
+    if(password1 == password2) {
+        if(name != "") {
+            form.action = "updateMember";
+            form.method = "post";
+            form.submit();
+        } else {
+            $("#checkResultPassword1").text("");
+            $("#checkResultPassword2").text("");
+            $("#checkResultName").text("닉네임을 입력해주세요.");
+        }
+    } else {
+        $("#checkResultPassword1").text("");
+        $("#checkResultPassword2").text("비밀번호를 다시 확인해주세요.");
+        $("#checkResultName").text("");
+    }
+}

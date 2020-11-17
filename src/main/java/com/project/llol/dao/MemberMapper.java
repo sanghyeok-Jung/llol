@@ -10,4 +10,5 @@ public interface MemberMapper {
     public MemberDTO getMember(MemberDTO dto);
     public void insertMember(MemberDTO dto);
     public int checkMember(MemberDTO dto);
+    public void updateMember(MemberDTO dto);
 }

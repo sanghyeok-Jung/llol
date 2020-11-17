@@ -10,4 +10,7 @@
     <select id="checkMember" parameterType="com.project.llol.dto.MemberDTO" resultType="int">
         <![CDATA[ SELECT count(*) FROM member WHERE id = #{id} ]]>
     </select>
+    <update id="updateMember" parameterType="com.project.llol.dto.MemberDTO">
+        <![CDATA[ UPDATE member SET password = #{password}, name = #{name} WHERE id = #{id} ]]>
+    </update>
 </mapper>

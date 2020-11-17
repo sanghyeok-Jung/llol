@@ -4,6 +4,7 @@ import com.project.llol.dto.MemberDTO;
 import com.project.llol.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
@@ -85,5 +86,33 @@ public class MemberController {
     public String getMemberInfo(MemberDTO dto) {
         String password = memberService.getMember(dto).getPassword();
         return password;
+    }
+
+    // updateMemberView
+    // updateMember.html로 이동하기 위한 처리
+    // 세션에 저장된 유저 정보가 없으면 로그인 페이지로 이동
+    // 세션에 저장된 유저 정보가 있으면 모델에 객체를 저장해서 회원정보 수정 페이지로 전달
+    @RequestMapping(value = "/updateMember", method = RequestMethod.GET)
+    public String updateMemberView(HttpSession session, Model model) {
+        MemberDTO user = (MemberDTO)session.getAttribute("user");
+        if(user == null) {
+            return "login";
+        }
+
+        model.addAttribute("user", user);
+        return "updateMember";
+    }
+
+    // updateMember
+    // 회원 정보 수정 페이지에서 입력된 데이터를 DB에 반영함
+    @RequestMapping(value = "/updateMember", method = RequestMethod.POST)
+    public String updateMember(MemberDTO dto, Model model, @RequestParam(value = "origin_password", required = false) String origin_password) {
+        if(dto.getPassword().equals("")) {
+            dto.setPassword(origin_password);
+        }
+        memberService.updateMember(dto);
+
+        model.addAttribute("user", dto);
+        return "redirect:updateMember";
     }
 }
