@@ -36,4 +36,4 @@ build/
 application.properties
 
 ### except image resources
-src/main/resources/static/images/*
+**/images/*
