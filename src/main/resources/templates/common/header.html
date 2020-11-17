@@ -24,7 +24,7 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <th:block th:if="${session.user != null}">
-                        <a class="dropdown-item" href="#">내 정보 확인</a>
+                        <a class="dropdown-item" th:href="|@{find}?name=${session.user.name}|">내 정보 확인</a>
                         <a class="dropdown-item" href="logout">로그아웃</a>
                     </th:block>
                     <th:block th:unless="${session.user != null}">
