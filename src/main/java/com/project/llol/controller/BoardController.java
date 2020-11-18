@@ -20,7 +20,7 @@ public class BoardController {
     private final int POST_PER_PAGES = 20;
 
     @RequestMapping(value = "/boardList", method = RequestMethod.GET)
-    public String boardList(Model model, @RequestParam(value = "pageNum", required = false) int pageNum) {
+    public String boardList(Model model, @RequestParam(value = "pageNum", required = false, defaultValue = "1") int pageNum) {
         // 전체 게시글 개수 조회
         int boardCount = boardService.getBoardCount();
 
