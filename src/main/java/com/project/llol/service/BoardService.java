@@ -16,27 +16,27 @@ public class BoardService {
         return mapper.getBoardCount();
     }
 
-    List<BoardDTO> getBoardList(int p_start, int p_end) {
+    public List<BoardDTO> getBoardList(int p_start, int p_end) {
         return mapper.getBoardList(p_start, p_end);
     }
 
-    BoardDTO getBoard(BoardDTO dto) {
+    public BoardDTO getBoard(BoardDTO dto) {
         return mapper.getBoard(dto);
     }
 
-    void increaseVisitCount(BoardDTO dto) {
+    public void increaseVisitCount(BoardDTO dto) {
         mapper.increaseVisitCount(dto);
     }
 
-    void insertBoard(BoardDTO dto) {
+    public void insertBoard(BoardDTO dto) {
         mapper.insertBoard(dto);
     }
 
-    void updateBoard(BoardDTO dto) {
+    public void updateBoard(BoardDTO dto) {
         mapper.updateBoard(dto);
     }
 
-    void deleteBoard(BoardDTO dto) {
+    public void deleteBoard(BoardDTO dto) {
         mapper.deleteBoard(dto);
     }
 }
