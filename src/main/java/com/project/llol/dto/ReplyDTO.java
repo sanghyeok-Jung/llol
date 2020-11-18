@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 public class ReplyDTO {
     private int replynum;
     private int boardnum;
+    private String replywriter;
     private String replycontent;
     private Timestamp replydate;
 }
