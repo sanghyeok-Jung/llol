@@ -55,7 +55,7 @@ public class BoardController {
 
         // 화면에 보여질 최소 페이지 번호, 최대 페이지 번호 (범위를 초과하면 next, prev 버튼이 보이도록 하기 위해 설정)
         int viewFirstPage = (pageNum - 3) > 1 ? (pageNum - 3) : 1;
-        int viewLastPage = (pageNum + 3) <= totalPages ? (pageNum + 3 : totalPages);
+        int viewLastPage = (pageNum + 3) <= totalPages ? (pageNum + 3) : totalPages;
         model.addAttribute("viewFirstPage", viewFirstPage);
         model.addAttribute("viewLastPage", viewLastPage);
         return "boardList";
