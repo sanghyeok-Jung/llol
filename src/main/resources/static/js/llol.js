@@ -179,7 +179,7 @@ function updateMember() {
 function insertBoard() {
     var form = document.insertBoardForm;
     var title = $("#InputTitle").val();
-    var content = $("#InputTitle").val();
+    var content = $("#InputContent").val();
 
     if(title != "") {
         if(content != "") {
