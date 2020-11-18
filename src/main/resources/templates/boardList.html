@@ -15,45 +15,62 @@
 </head>
 <body>
   <header th:include = "common/header.html"></header>
-  <section>
+  <section style = "width: 90%; margin-top: 30px; margin-left: auto; margin-right: auto">
     <table class="table">
       <thead class="thead-light">
       <tr>
-        <th scope="col">자유 게시판</th>
+        <th scope="col">
+          <p style = "display: inline">자유 게시판</p>&nbsp;
+          <form name = "boardSearchForm" class="form-inline my-2 my-lg-0" style = "display: inline">
+            <input name = "boardtitle" class="form-control mr-sm-2" type="search" placeholder="제목 검색" aria-label="Search">
+            <button type = "submit" class="btn btn-success" onClick = "board_search()">검색</button>
+          </form>
+          <button style = "display: inline; float: right" type = "submit" class="btn btn-success" onClick = "location.href='insertBoard'">글쓰기</button>
+        </th>
       </tr>
       </thead>
       <tbody>
       <tr th:if="${boardList != null}" th:each="board : ${boardList}">
         <td scope="row">
-          <img style = "float:right" th:if="${board.boardimage != null}" th:src="|@{upload}/${board.boardimage}|">
-          <span th:text="${board.boardtitle}"></span><br>
-          <span th:text="${board.boardwriter}"></span>
+          <img th:if="${board.boardimage != null}" th:src="|@{upload}/${board.boardimage}|" class="rounded float-right">
+          <span th:text="${board.boardtitle}" style = "font-weight: bold; size: 15px"></span><br>
+          <span th:text="${board.boardwriter}" style = "size: 11px"></span>
         </td>
       </tr>
       <tr th:unless="${boardList != null}">
         <td scope="row"><p style = "text-align: center">게시글이 존재하지 않습니다.</p></td>
       </tr>
       </tbody>
+      <tfoot>
+        <tr>
+          <td scope="row">
+            <ul class="pagination justify-content-center">
+              <li class="page-item" th:if="${viewFirstPage > 1}">
+                <a class="page-link" th:href="|@{boardList?pageNum=}${pageNum - 1}|">Previous</a>
+              </li>
+              <th:block th:with="viewFirstPageEnd = ${pageNum - 1}" th:if="${pageNum > 1}">
+                <th:block th:each="num : ${#numbers.sequence(viewFirstPage, viewFirstPageEnd)}">
+                  <li class="page-item"><a class="page-link" th:href="|@{boardList?pageNum=}${num}|" th:text="${num}"></a></li>
+                </th:block>
+              </th:block>
+              <li class="page-item active" aria-current="page">
+                <span class="page-link">
+                  <span th:text="${pageNum}"></span>
+                </span>
+              </li>
+              <th:block th:with="viewLastPageStart = ${pageNum + 1}" th:if="${pageNum} < ${totalPages}">
+                <th:block th:each="num : ${#numbers.sequence(viewLastPageStart, viewLastPage)}">
+                  <li class="page-item"><a class="page-link" th:href="|@{boardList?pageNum=}${num}|" th:text="${num}"></a></li>
+                </th:block>
+              </th:block>
+              <li class="page-item" th:if="${viewLastPage} < ${totalPages}">
+                <a class="page-link" th:href="|@{boardList?pageNum=}${pageNum + 1}|">Next</a>
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </tfoot>
     </table>
-
-    <nav aria-label="...">
-      <ul class="pagination">
-        <li class="page-item disabled">
-          <span class="page-link">Previous</span>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item active" aria-current="page">
-      <span class="page-link">
-        2
-        <span class="sr-only">(current)</span>
-      </span>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item">
-          <a class="page-link" href="#">Next</a>
-        </li>
-      </ul>
-    </nav>
   </section>
 </body>
 </html>
