@@ -1,6 +1,7 @@
 package com.project.llol.controller;
 
 import com.project.llol.dto.BoardDTO;
+import com.project.llol.dto.MemberDTO;
 import com.project.llol.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -59,5 +61,23 @@ public class BoardController {
         model.addAttribute("viewFirstPage", viewFirstPage);
         model.addAttribute("viewLastPage", viewLastPage);
         return "boardList";
+    }
+
+    @RequestMapping(value = "/insertBoard", method = RequestMethod.GET)
+    public String insertBoardView() {
+        return "insertBoard";
+    }
+
+    @RequestMapping(value = "/insertBoard", method = RequestMethod.POST)
+    public String insertBoard(BoardDTO dto, HttpSession session) {
+        MemberDTO user = (MemberDTO)session.getAttribute("user");
+        if (user == null) {
+            return "redirect:loginView";
+        }
+
+        dto.setBoardwriter(user.getId());
+
+        boardService.insertBoard(dto);
+        return "redirect:boardList";
     }
 }
