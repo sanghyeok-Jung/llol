@@ -36,6 +36,12 @@ public class BoardController {
             // 최대 페이지 번호 설정
             totalPages = (boardCount % POST_PER_PAGES) == 0 ? (boardCount / POST_PER_PAGES) : ((boardCount / POST_PER_PAGES) + 1);
 
+            // url을 조작해서 임의의 페이지로 이동하고자 할 때의 예외 처리
+            // 요청한 페이지 번호가 전체 페이지 번호를 초과한 경우, 마지막 페이지로 변경해준다.
+            if(pageNum > totalPages) {
+                pageNum = totalPages;
+            }
+
             // 게시글 번호(boardnum)를 기준으로 p_start ~ p_end 사이의 게시글 범위 지정을 위한 값 설정
             int p_end = boardCount - ((pageNum - 1) * POST_PER_PAGES);
             int p_start = p_end - POST_PER_PAGES;
