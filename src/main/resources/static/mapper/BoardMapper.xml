@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.llol.dao.BoardMapper">
-
+    <select id="getBoardCount" resultType="int">
+        <![CDATA[ SELECT COUNT(*) FROM board ]]>
+    </select>
+    <select id="getBoardList" parameterType="int" resultType="com.project.llol.dto.BoardDTO">
+        <![CDATA[ SELECT * FROM board WHERE boardnum BETWEEN #{p_start} AND #{p_end} ORDER BY boardnum DESC ]]>
+    </select>
+    <select id="getBoard" parameterType="com.project.llol.dto.BoardDTO" resultType="com.project.llol.dto.BoardDTO">
+        <![CDATA[ SELECT * FROM board WHERE boardnum = #{boardnum} ]]>
+    </select>
+    <update id="increaseVisitCount" parameterType="com.project.llol.dto.BoardDTO">
+        <![CDATA[ UPDATE board SET boardvisit = boardvisit + 1 WHERE boardnum = #{boardnum} ]]>
+    </update>
+    <insert id="insertBoard" parameterType="com.project.llol.dto.BoardDTO">
+        <![CDATA[ INSERT INTO board(boardwriter, boardtitle, boardcontent, boardimage, boardyoutube, boarddate, boardvisit) VALUES(#{boardwriter}, #{boardtitle#}, #{boardcontent}, #{boardimage}, #{boardyoutube}, SYSDATE(), 0) ]]>
+    </insert>
+    <update id="updateBoard" parameterType="com.project.llol.dto.BoardDTO">
+        <![CDATA[ UPDATE board SET boardtitle = #{boardtitle}, boardcontent = #{boardcontent}, boardimage = #{boardimage}, boardyoutube = #{boardyoutube} WHERE boardnum = #{boardnum} ]]>
+    </update>
+    <delete id="deleteBoard" parameterType="com.project.llol.dto.BoardDTO">
+        <![CDATA[ DELETE FROM board WHERE boardnum = #{boardnum} ]]>
+    </delete>
 </mapper>
