@@ -64,7 +64,11 @@ public class BoardController {
     }
 
     @RequestMapping(value = "/insertBoard", method = RequestMethod.GET)
-    public String insertBoardView() {
+    public String insertBoardView(HttpSession session) {
+        MemberDTO user = (MemberDTO)session.getAttribute("user");
+        if(user == null) {
+            return "redirect:loginView";
+        }
         return "insertBoard";
     }
 
