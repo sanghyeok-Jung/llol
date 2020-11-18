@@ -37,3 +37,6 @@ application.properties
 
 ### except image resources
 **/images/*
+
+### except upload files
+**/upload/*
