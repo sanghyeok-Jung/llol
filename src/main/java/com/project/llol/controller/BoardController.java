@@ -8,10 +8,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import java.util.List;
 
 @Controller
+@SessionAttributes("pageNum")
 public class BoardController {
     @Autowired
     private BoardService boardService;
@@ -46,6 +48,7 @@ public class BoardController {
         }
 
         model.addAttribute("boardList", boardList);
+        model.addAttribute("pageNum", pageNum);
         return "boardList";
     }
 }
