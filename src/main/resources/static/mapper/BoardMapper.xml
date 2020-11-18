@@ -19,7 +19,7 @@
     </update>
     <!-- 게시글 등록 -->
     <insert id="insertBoard" parameterType="com.project.llol.dto.BoardDTO">
-        <![CDATA[ INSERT INTO board(boardwriter, boardtitle, boardcontent, boardimage, boardyoutube, boarddate, boardvisit) VALUES(#{boardwriter}, #{boardtitle#}, #{boardcontent}, #{boardimage}, #{boardyoutube}, SYSDATE(), 0) ]]>
+        <![CDATA[ INSERT INTO board(boardwriter, boardtitle, boardcontent, boardimage, boardyoutube, boarddate, boardvisit) VALUES(#{boardwriter}, #{boardtitle}, #{boardcontent}, #{boardimage}, #{boardyoutube}, SYSDATE(), 0) ]]>
     </insert>
     <!-- 게시글 수정 -->
     <update id="updateBoard" parameterType="com.project.llol.dto.BoardDTO">
