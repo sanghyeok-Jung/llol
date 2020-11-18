@@ -175,3 +175,23 @@ function updateMember() {
         $("#checkResultName").text("");
     }
 }
+
+function insertBoard() {
+    var form = document.insertBoardForm;
+    var title = $("#InputTitle").val();
+    var content = $("#InputTitle").val();
+
+    if(title != "") {
+        if(content != "") {
+            form.action = "insertBoard"
+            form.method = "post";
+            form.submit();
+        } else {
+            $("#checkResultTitle").text("");
+            $("#checkResultContent").text("내용을 입력하세요.");
+        }
+    } else {
+        $("#checkResultTitle").text("제목을 입력하세요.");
+        $("#checkResultContent").text("");
+    }
+}
