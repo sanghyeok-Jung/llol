@@ -4,14 +4,15 @@ import com.project.llol.dto.BoardDTO;
 import com.project.llol.dto.MemberDTO;
 import com.project.llol.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -19,6 +20,10 @@ import java.util.List;
 public class BoardController {
     @Autowired
     private BoardService boardService;
+
+    // 파일 업로드 경로 지정 (임시 경로와 실제 업로드 경로를 동일하게 설정해봄)
+    @Value("${spring.servlet.multipart.location}")
+    private String filePath;
 
     // 한 페이지에 노출될 게시글 개수를 상수로 지정함
     private final int POST_PER_PAGES = 20;
@@ -79,10 +84,25 @@ public class BoardController {
     }
 
     @RequestMapping(value = "/insertBoard", method = RequestMethod.POST)
-    public String insertBoard(BoardDTO dto, HttpSession session) {
+    public String insertBoard(BoardDTO dto, HttpSession session, @RequestParam(value = "file") MultipartFile file) {
         MemberDTO user = (MemberDTO)session.getAttribute("user");
         if (user == null) {
             return "redirect:loginView";
+        }
+
+        if(!file.isEmpty()) {
+            // 파일 이름.확장자 추출
+            String fileName = file.getOriginalFilename();
+
+            File uploadFile = new File(filePath + fileName);
+            try {
+                file.transferTo(uploadFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            dto.setBoardimage(fileName);
+        } else {
+            dto.setBoardimage("");
         }
 
         dto.setBoardwriter(user.getId());
