@@ -213,7 +213,7 @@ function deleteBoard() {
 function updateBoardView() {
     var form = document.boardForm;
     var boardnum = form.boardnum.value;
-    var boardwriter = from.boardwriter.value;
+    var boardwriter = form.boardwriter.value;
 
     form.method = "post";
     form.setAttribute("boardnum", boardnum);
