@@ -195,3 +195,17 @@ function insertBoard() {
         $("#checkResultContent").text("");
     }
 }
+
+function deleteBoard() {
+    var form = document.boardForm;
+    var boardnum = form.boardnum.value;
+    var boardwriter = form.boardwriter.value;
+
+    if(confirm("정말 삭제하시겠습니까?") == true) {
+        form.method = "post";
+        form.setAttribute("boardnum", boardnum);
+        form.setAttribute("boardwriter", boardwriter);
+        form.action = "deleteBoard";
+        form.submit();
+    }
+}

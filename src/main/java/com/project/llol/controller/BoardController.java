@@ -137,4 +137,24 @@ public class BoardController {
         model.addAttribute("board", board);
         return "getBoard";
     }
+
+    @RequestMapping(value = "/deleteBoard", method = RequestMethod.POST)
+    public String deleteBoard(HttpSession session, @RequestParam(value = "boardnum") int boardnum, @RequestParam(value = "boardwriter") String boardwriter) {
+        int pageNum = (Integer)session.getAttribute("pageNum");
+        MemberDTO user = (MemberDTO)session.getAttribute("user");
+        // 로그인 상태가 아니면 로그인 화면으로 이동
+        if(user == null) {
+            return "redirect:loginView";
+        }
+        // 게시물 작성자랑 로그인중인 계정 id랑 일치하지 않으면 로그인 화면으로 이동
+        if(!user.getId().equals(boardwriter)) {
+            return "redirect:loginView";
+        }
+
+        BoardDTO board = new BoardDTO();
+        board.setBoardnum(boardnum);
+        boardService.deleteBoard(board);
+
+        return "redirect:boardList?pageNum=" + pageNum;
+    }
 }
