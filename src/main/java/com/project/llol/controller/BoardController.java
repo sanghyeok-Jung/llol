@@ -115,7 +115,26 @@ public class BoardController {
         // 작성자 아이디는 현재 세션에 저장된 사용자 아이디로 설정한다.
         dto.setBoardwriter(user.getId());
 
+        // 일반 유튜브 링크 예제 : https://www.youtube.com/watch?v=NBhSf_CVTJ8
+        // iframe 폼 url을 사용하기 위해, 마지막 속성값을 추출해서 db에 저장한다. (NBhSf_CVTJ8)
+        dto.setBoardyoutube(dto.getBoardyoutube().replace("https://www.youtube.com/watch?v=", ""));
+
         boardService.insertBoard(dto);
         return "redirect:boardList";
+    }
+
+    @RequestMapping(value = "/getBoard", method = RequestMethod.GET)
+    public String getBoard(HttpSession session, Model model, @RequestParam(value = "boardnum") int boardnum) {
+        MemberDTO user = (MemberDTO)session.getAttribute("user");
+        if(user == null) {
+            return "redirect:loginView";
+        }
+
+        BoardDTO board = new BoardDTO();
+        board.setBoardnum(boardnum);
+        board = boardService.getBoard(board);
+
+        model.addAttribute("board", board);
+        return "getBoard";
     }
 }
