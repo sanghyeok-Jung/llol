@@ -3,7 +3,7 @@
 <mapper namespace="com.project.llol.dao.BoardMapper">
     <!-- 전체 게시글 개수 확인 -->
     <select id="getBoardCount" resultType="int">
-        <![CDATA[ SELECT COUNT(*) FROM board ]]>
+        <![CDATA[ SELECT MAX(boardnum) FROM board ]]>
     </select>
     <!-- 게시글 중 특정 boardnum 범위의 게시글 리스트를 조회 -->
     <select id="getBoardList" parameterType="int" resultType="com.project.llol.dto.BoardDTO">
