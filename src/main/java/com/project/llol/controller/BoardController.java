@@ -76,6 +76,7 @@ public class BoardController {
 
     @RequestMapping(value = "/insertBoard", method = RequestMethod.GET)
     public String insertBoardView(HttpSession session) {
+        // 로그인 상태가 아니라면 로그인 화면으로 이동시킨다.
         MemberDTO user = (MemberDTO)session.getAttribute("user");
         if(user == null) {
             return "redirect:loginView";
@@ -85,26 +86,33 @@ public class BoardController {
 
     @RequestMapping(value = "/insertBoard", method = RequestMethod.POST)
     public String insertBoard(BoardDTO dto, HttpSession session, @RequestParam(value = "file") MultipartFile file) {
+        // 로그인 상태가 아니라면 로그인 화면으로 이동시킨다.
         MemberDTO user = (MemberDTO)session.getAttribute("user");
         if (user == null) {
             return "redirect:loginView";
         }
 
+        // 파일이 비어있는지 확인함 (비어있지 않으면 정상적으로 동작함)
         if(!file.isEmpty()) {
-            // 파일 이름.확장자 추출
+            // 파일 이름.확장자 추출(경로를 제거하고 정확히 파일 이름과 확장자만 추출함)
             String fileName = file.getOriginalFilename();
 
+            // 업로드될 파일 설정 (개인적으로 지정한 경로 + 파일의 오리지널이름)
             File uploadFile = new File(filePath + fileName);
             try {
+                // 페이지에서 전달받은 파일을 다음과 같은 정보로 업로드 처리 한다.
                 file.transferTo(uploadFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            // DB에는 파일의 오리지널이름만 저장해준다.
             dto.setBoardimage(fileName);
         } else {
+            // 파일이 비어있으면 값을 공백으로 처리 한다.
             dto.setBoardimage("");
         }
 
+        // 작성자 아이디는 현재 세션에 저장된 사용자 아이디로 설정한다.
         dto.setBoardwriter(user.getId());
 
         boardService.insertBoard(dto);
