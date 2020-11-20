@@ -39,7 +39,7 @@
                     <button type="button" class="btn btn-primary" style = "width: 30%" onClick="updateBoardView()">수정</button>
                     <button type="button" class="btn btn-danger" style = "width: 30%" onClick="deleteBoard()">삭제</button>
                 </th:block>
-                <button type="button" class="btn btn-secondary" style = "width: 20%; float: right" th:href="|@{boardList?pageNum=}${session.pageNum}|">목록</button>
+                <a class="btn btn-secondary" style = "width: 20%; float: right" th:href="|@{boardList?pageNum=}${session.pageNum}|">목록</a>
             </div>
         </form>
     </section>
