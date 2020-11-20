@@ -3,11 +3,11 @@
 <mapper namespace="com.project.llol.dao.BoardMapper">
     <!-- 전체 게시글 개수 확인 -->
     <select id="getBoardCount" resultType="int">
-        <![CDATA[ SELECT MAX(boardnum) FROM board ]]>
+        <![CDATA[ SELECT MAX(rownum) FROM (SELECT ROW_NUMBER() OVER(ORDER BY boardnum) AS rownum FROM board) board ]]>
     </select>
-    <!-- 게시글 중 특정 boardnum 범위의 게시글 리스트를 조회 -->
+    <!-- 전체 게시글 중 특정 ROW에 대한 정보만 가지고 옴 -->
     <select id="getBoardList" parameterType="int" resultType="com.project.llol.dto.BoardDTO">
-        <![CDATA[ SELECT * FROM board WHERE boardnum BETWEEN #{p_start} AND #{p_end} ORDER BY boardnum DESC ]]>
+        <![CDATA[ SELECT * FROM (SELECT ROW_NUMBER() OVER(ORDER BY boardnum) AS rownum, boardnum, boardwriter, boardtitle, boardcontent, boardimage, boardyoutube, boarddate, boardvisit FROM board) AS rowboard WHERE rownum BETWEEN #{p_start} AND #{p_end} ORDER BY rownum DESC ]]>
     </select>
     <!-- 게시글 1개에 대한 정보 조회 -->
     <select id="getBoard" parameterType="com.project.llol.dto.BoardDTO" resultType="com.project.llol.dto.BoardDTO">
