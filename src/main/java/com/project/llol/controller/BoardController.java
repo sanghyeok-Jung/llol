@@ -49,7 +49,7 @@ public class BoardController {
 
             // 게시글 번호(boardnum)를 기준으로 p_start ~ p_end 사이의 게시글 범위 지정을 위한 값 설정
             int p_end = boardCount - ((pageNum - 1) * POST_PER_PAGES);
-            int p_start = p_end - POST_PER_PAGES;
+            int p_start = p_end - POST_PER_PAGES + 1;
 
             // 마지막 페이지에 POST_PER_PAGES 개수 만큼의 게시글이 없을 때 처리하기 위한 부분
             if(p_start < 1) {
