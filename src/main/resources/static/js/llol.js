@@ -221,3 +221,31 @@ function updateBoardView() {
     form.action = "updateBoardView";
     form.submit();
 }
+
+function deleteImage() {
+    if(confirm("정말 이미지를 제거하시겠습니까?") == true) {
+        document.updateBoardForm.boardimage.value="";
+    }
+}
+
+function updateBoard() {
+    var form = document.updateBoardForm;
+    var title = $("#InputTitle").val();
+    var content = $("#Content").val();
+
+    if(title != "") {
+        if(content != "") {
+            if(confirm("수정 하시겠습니까?") == true) {
+                form.action = "updateBoard"
+                form.method = "post";
+                form.submit();
+            }
+        } else {
+            $("#checkResultTitle").text("");
+            $("#checkResultContent").text("내용은 공백일 수 없습니다.");
+        }
+    } else {
+        $("#checkResultTitle").text("제목은 공백일 수 없습니다.");
+        $("#checkResultContent").text("");
+    }
+}

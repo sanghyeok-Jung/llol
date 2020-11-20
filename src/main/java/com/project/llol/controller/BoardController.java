@@ -157,4 +157,55 @@ public class BoardController {
 
         return "redirect:boardList?pageNum=" + pageNum;
     }
+
+    @RequestMapping(value = "/updateBoardView", method = RequestMethod.POST)
+    public String updateBoardView(HttpSession session, Model model, @RequestParam(value = "boardnum") int boardnum, @RequestParam(value = "boardwriter") String boardwriter) {
+        MemberDTO user = (MemberDTO)session.getAttribute("user");
+        if(user == null) {
+            return "redirect:loginView";
+        }
+        if(!user.getId().equals(boardwriter)) {
+            return "redirect:loginView";
+        }
+
+        BoardDTO board = new BoardDTO();
+        board.setBoardnum(boardnum);
+        board = boardService.getBoard(board);
+
+        model.addAttribute("board", board);
+        return "updateBoard";
+    }
+
+    @RequestMapping(value = "/updateBoard", method = RequestMethod.POST)
+    public String updateBoard(HttpSession session, Model model, BoardDTO board, @RequestParam(value = "file", required = false, defaultValue = "") MultipartFile file) {
+        MemberDTO user = (MemberDTO)session.getAttribute("user");
+        if(user == null) {
+            return "redirect:loginView";
+        }
+        if(!user.getId().equals(board.getBoardwriter())) {
+            return "redirect:loginView";
+        }
+
+        // 파일이 비어있는지 확인함 (비어있지 않으면 신규 이미지가 업로드 됨)
+        if(!file.isEmpty()) {
+            // 파일 이름.확장자 추출(경로를 제거하고 정확히 파일 이름과 확장자만 추출함)
+            String fileName = file.getOriginalFilename();
+
+            // 업로드될 파일 설정 (개인적으로 지정한 경로 + 파일의 오리지널이름)
+            File uploadFile = new File(filePath + fileName);
+            try {
+                // 페이지에서 전달받은 파일을 다음과 같은 정보로 업로드 처리 한다.
+                file.transferTo(uploadFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            // DB에는 파일의 오리지널이름만 저장해준다.
+            board.setBoardimage(fileName);
+        }
+        board.setBoardyoutube(board.getBoardyoutube().replace("https://www.youtube.com/watch?v=", ""));
+
+        boardService.updateBoard(board);
+
+        return "redirect:getBoard?boardnum=" + board.getBoardnum();
+    }
 }
