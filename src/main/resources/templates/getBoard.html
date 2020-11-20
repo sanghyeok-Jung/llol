@@ -37,7 +37,7 @@
             <div class="form-group" style = "text-align: center">
                 <th:block th:if="${session.user.id == board.boardwriter}">
                     <button type="button" class="btn btn-primary" style = "width: 30%" onClick="updateBoard()">수정</button>
-                    <button type="button" class="btn btn-primary" style = "width: 30%" onClick="deleteBoard()">삭제</button>
+                    <button type="button" class="btn btn-danger" style = "width: 30%" onClick="deleteBoard()">삭제</button>
                 </th:block>
                 <button type="button" class="btn btn-secondary" style = "width: 20%; float: right" th:href="@{boardList?pageNum=}${session.pageNum}">목록</button>
             </div>
