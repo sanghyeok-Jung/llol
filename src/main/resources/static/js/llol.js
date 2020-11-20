@@ -209,3 +209,15 @@ function deleteBoard() {
         form.submit();
     }
 }
+
+function updateBoardView() {
+    var form = document.boardForm;
+    var boardnum = form.boardnum.value;
+    var boardwriter = from.boardwriter.value;
+
+    form.method = "post";
+    form.setAttribute("boardnum", boardnum);
+    form.setAttribute("boardwriter", boardwriter);
+    form.action = "updateBoardView";
+    form.submit();
+}
