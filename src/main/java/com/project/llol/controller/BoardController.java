@@ -21,7 +21,7 @@ public class BoardController {
     @Autowired
     private BoardService boardService;
 
-    // 파일 업로드 경로 지정 (임시 경로와 실제 업로드 경로를 동일하게 설정함)
+    // 파일 업로드 경로 지정 (임시 경로와 실제 업로드 경로를 동일하게 설정)
     @Value("${spring.servlet.multipart.location}")
     private String filePath;
 
