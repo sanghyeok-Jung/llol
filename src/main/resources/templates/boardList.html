@@ -33,7 +33,7 @@
       <tr th:if="${boardList != null}" th:each="board : ${boardList}">
         <td scope="row">
           <img th:if="${board.boardimage != ''}" th:src="|@{upload/}${board.boardimage}|" style = "width:200px; height: 100px" class="img-thumbnail float-right">
-          <span th:text="${board.boardtitle}" style = "font-weight: bold; size: 15px"></span><br>
+          <a th:text="${board.boardtitle}" th:href="|@{getBoard?boardnum=}${board.boardnum}|" style = "font-weight: bold; size: 15px"></a><br>
           <span th:text="${board.boardwriter}" style = "size: 11px"></span>
         </td>
       </tr>
