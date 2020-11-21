@@ -12,12 +12,12 @@ public class BoardService {
     @Autowired
     private BoardMapper mapper;
 
-    public int getBoardCount() {
-        return mapper.getBoardCount();
+    public int getBoardCount(String searchTitle) {
+        return mapper.getBoardCount(searchTitle);
     }
 
-    public List<BoardDTO> getBoardList(int p_start, int p_end) {
-        return mapper.getBoardList(p_start, p_end);
+    public List<BoardDTO> getBoardList(String searchTitle, int p_start, int p_end) {
+        return mapper.getBoardList(searchTitle, p_start, p_end);
     }
 
     public BoardDTO getBoard(BoardDTO dto) {

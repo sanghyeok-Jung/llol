@@ -9,14 +9,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 @Controller
-@SessionAttributes("pageNum")
 public class BoardController {
     @Autowired
     private BoardService boardService;
@@ -26,12 +24,15 @@ public class BoardController {
     private String filePath;
 
     // 한 페이지에 노출될 게시글 개수를 상수로 지정함
-    private final int POST_PER_PAGES = 20;
+    private final int POST_PER_PAGES = 10;
 
     @RequestMapping(value = "/boardList", method = RequestMethod.GET)
-    public String boardList(Model model, @RequestParam(value = "pageNum", required = false, defaultValue = "1") int pageNum) {
+    public String boardList(Model model, @RequestParam(value = "pageNum", required = false, defaultValue = "1") int pageNum, @RequestParam(value = "title", defaultValue = "") String title) {
+        // 제목 검색 기능 지원을 위해 쿼리문에 대입할 문자열 가공
+        String searchTitle = "%" + title + "%";
+
         // 전체 게시글 개수 조회
-        int boardCount = boardService.getBoardCount();
+        int boardCount = boardService.getBoardCount(searchTitle);
         int totalPages = 1;
 
         List<BoardDTO> boardList = null;
@@ -56,7 +57,7 @@ public class BoardController {
                 p_start = 1;
             }
 
-            boardList = boardService.getBoardList(p_start, p_end);
+            boardList = boardService.getBoardList(searchTitle, p_start, p_end);
         }
 
         // 전체 페이지 개수
@@ -65,6 +66,7 @@ public class BoardController {
         model.addAttribute("boardList", boardList);
         // 현재 페이지 번호
         model.addAttribute("pageNum", pageNum);
+        model.addAttribute("title", title);
 
         // 화면에 보여질 최소 페이지 번호, 최대 페이지 번호 (범위를 초과하면 next, prev 버튼이 보이도록 하기 위해 설정)
         int viewFirstPage = (pageNum - 3) > 1 ? (pageNum - 3) : 1;
@@ -75,12 +77,15 @@ public class BoardController {
     }
 
     @RequestMapping(value = "/insertBoard", method = RequestMethod.GET)
-    public String insertBoardView(HttpSession session) {
+    public String insertBoardView(HttpSession session, Model model, @RequestParam(value = "pageNum", required = false, defaultValue = "1") int pageNum, @RequestParam(value = "title", defaultValue = "") String title) {
         // 로그인 상태가 아니라면 로그인 화면으로 이동시킨다.
         MemberDTO user = (MemberDTO)session.getAttribute("user");
         if(user == null) {
             return "redirect:loginView";
         }
+
+        model.addAttribute("pageNum", pageNum);
+        model.addAttribute("title", title);
         return "insertBoard";
     }
 
@@ -124,7 +129,7 @@ public class BoardController {
     }
 
     @RequestMapping(value = "/getBoard", method = RequestMethod.GET)
-    public String getBoard(HttpSession session, Model model, @RequestParam(value = "boardnum") int boardnum) {
+    public String getBoard(HttpSession session, Model model, @RequestParam(value = "boardnum") int boardnum, @RequestParam(value = "pageNum", required = false, defaultValue = "1") int pageNum, @RequestParam(value = "title", defaultValue = "") String title) {
         MemberDTO user = (MemberDTO)session.getAttribute("user");
         if(user == null) {
             return "redirect:loginView";
@@ -135,12 +140,13 @@ public class BoardController {
         board = boardService.getBoard(board);
 
         model.addAttribute("board", board);
+        model.addAttribute("pageNum", pageNum);
+        model.addAttribute("title", title);
         return "getBoard";
     }
 
     @RequestMapping(value = "/deleteBoard", method = RequestMethod.POST)
     public String deleteBoard(HttpSession session, @RequestParam(value = "boardnum") int boardnum, @RequestParam(value = "boardwriter") String boardwriter) {
-        int pageNum = (Integer)session.getAttribute("pageNum");
         MemberDTO user = (MemberDTO)session.getAttribute("user");
         // 로그인 상태가 아니면 로그인 화면으로 이동
         if(user == null) {
@@ -155,11 +161,11 @@ public class BoardController {
         board.setBoardnum(boardnum);
         boardService.deleteBoard(board);
 
-        return "redirect:boardList?pageNum=" + pageNum;
+        return "redirect:boardList";
     }
 
     @RequestMapping(value = "/updateBoardView", method = RequestMethod.POST)
-    public String updateBoardView(HttpSession session, Model model, @RequestParam(value = "boardnum") int boardnum, @RequestParam(value = "boardwriter") String boardwriter) {
+    public String updateBoardView(HttpSession session, Model model, @RequestParam(value = "boardnum") int boardnum, @RequestParam(value = "boardwriter") String boardwriter, @RequestParam(value = "pageNum", required = false, defaultValue = "1") int pageNum, @RequestParam(value = "title", defaultValue = "") String title) {
         MemberDTO user = (MemberDTO)session.getAttribute("user");
         if(user == null) {
             return "redirect:loginView";
@@ -173,11 +179,13 @@ public class BoardController {
         board = boardService.getBoard(board);
 
         model.addAttribute("board", board);
+        model.addAttribute("pageNum", pageNum);
+        model.addAttribute("title", title);
         return "updateBoard";
     }
 
     @RequestMapping(value = "/updateBoard", method = RequestMethod.POST)
-    public String updateBoard(HttpSession session, Model model, BoardDTO board, @RequestParam(value = "file", required = false, defaultValue = "") MultipartFile file) {
+    public String updateBoard(HttpSession session, Model model, BoardDTO board, @RequestParam(value = "file", required = false, defaultValue = "") MultipartFile file, @RequestParam(value = "pageNum", required = false, defaultValue = "1") int pageNum, @RequestParam(value = "title", defaultValue = "") String title) {
         MemberDTO user = (MemberDTO)session.getAttribute("user");
         if(user == null) {
             return "redirect:loginView";
@@ -201,11 +209,16 @@ public class BoardController {
             }
             // DB에는 파일의 오리지널이름만 저장해준다.
             board.setBoardimage(fileName);
+        } else if(board.getBoardimage() == null){
+            board.setBoardimage("");
         }
-        board.setBoardyoutube(board.getBoardyoutube().replace("https://www.youtube.com/watch?v=", ""));
+
+        if(!board.getBoardyoutube().equals("")) {
+            board.setBoardyoutube(board.getBoardyoutube().replace("https://www.youtube.com/watch?v=", ""));
+        }
 
         boardService.updateBoard(board);
 
-        return "redirect:getBoard?boardnum=" + board.getBoardnum();
+        return "redirect:getBoard?boardnum=" + board.getBoardnum() + "&pageNum=" + pageNum + "&title=" + title;
     }
 }

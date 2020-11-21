@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.llol.dao.BoardMapper">
     <!-- 전체 게시글 개수 확인 -->
-    <select id="getBoardCount" resultType="int">
-        <![CDATA[ SELECT MAX(rownum) FROM (SELECT ROW_NUMBER() OVER(ORDER BY boardnum) AS rownum FROM board) board ]]>
+    <select id="getBoardCount" parameterType="String" resultType="int">
+        <![CDATA[ SELECT COUNT(rownum) FROM (SELECT ROW_NUMBER() OVER(ORDER BY boardnum) AS rownum FROM board WHERE boardtitle LIKE #{searchTitle}) board ]]>
     </select>
     <!-- 전체 게시글 중 특정 ROW에 대한 정보만 가지고 옴 -->
-    <select id="getBoardList" parameterType="int" resultType="com.project.llol.dto.BoardDTO">
-        <![CDATA[ SELECT * FROM (SELECT ROW_NUMBER() OVER(ORDER BY boardnum) AS rownum, boardnum, boardwriter, boardtitle, boardcontent, boardimage, boardyoutube, boarddate, boardvisit FROM board) AS rowboard WHERE rownum BETWEEN #{p_start} AND #{p_end} ORDER BY rownum DESC ]]>
+    <select id="getBoardList" resultType="com.project.llol.dto.BoardDTO">
+        <![CDATA[ SELECT * FROM (SELECT ROW_NUMBER() OVER(ORDER BY boardnum) AS rownum, boardnum, boardwriter, boardtitle, boardcontent, boardimage, boardyoutube, boarddate, boardvisit FROM board WHERE boardtitle LIKE #{searchTitle}) AS rowboard WHERE rownum BETWEEN #{p_start} AND #{p_end} ORDER BY rownum DESC ]]>
     </select>
     <!-- 게시글 1개에 대한 정보 조회 -->
     <select id="getBoard" parameterType="com.project.llol.dto.BoardDTO" resultType="com.project.llol.dto.BoardDTO">

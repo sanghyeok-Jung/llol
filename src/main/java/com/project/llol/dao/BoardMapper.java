@@ -9,8 +9,8 @@ import java.util.List;
 @Repository
 @Mapper
 public interface BoardMapper {
-    int getBoardCount();
-    List<BoardDTO> getBoardList(int p_start, int p_end);
+    int getBoardCount(String searchTitle);
+    List<BoardDTO> getBoardList(String searchTitle, int p_start, int p_end);
     BoardDTO getBoard(BoardDTO dto);
     void increaseVisitCount(BoardDTO dto);
     void insertBoard(BoardDTO dto);
