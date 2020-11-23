@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.llol.dao.ReplyMapper">
+    <!-- 댓글 조회 -->
+    <select id="getReplyList" parameterType="int" resultType="com.project.llol.dto.ReplyDTO">
+        <![CDATA[ SELECT * FROM reply WHERE boardnum = #{boardnum} ORDER BY replynum ASC ]]>
+    </select>
+    <!-- 댓글 등록 -->
+    <insert id="insertReply" parameterType="com.project.llol.dto.ReplyDTO">
+        <![CDATA[ INSERT INTO reply(boardnum, replywriter, replycontent, replydate) VALUES(#{boardnum}, #{replywriter}, #{replycontent}, SYSDATE()) ]]>
+    </insert>
+    <!-- 댓글 수정 -->
+    <update id="updateReply" parameterType="com.project.llol.dto.ReplyDTO">
+        <![CDATA[ UPDATE reply SET replycontent = #{replycontent} WHERE replynum = #{replynum} ]]>
+    </update>
+    <!-- 댓글 삭제 -->
+    <delete id="deleteReply" parameterType="int">
+        <![CDATA[ DELETE FROM reply WHERE replynum = #{replynum} ]]>
+    </delete>
+</mapper>

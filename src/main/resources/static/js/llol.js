@@ -183,7 +183,7 @@ function insertBoard() {
 
     if(title != "") {
         if(content != "") {
-            form.action = "insertBoard"
+            form.action = "insertBoard";
             form.method = "post";
             form.submit();
         } else {
@@ -236,7 +236,7 @@ function updateBoard() {
     if(title != "") {
         if(content != "") {
             if(confirm("수정 하시겠습니까?") == true) {
-                form.action = "updateBoard"
+                form.action = "updateBoard";
                 form.method = "post";
                 form.submit();
             }
@@ -248,4 +248,27 @@ function updateBoard() {
         $("#checkResultTitle").text("제목은 공백일 수 없습니다.");
         $("#checkResultContent").text("");
     }
+}
+
+function deleteReply(replynum) {
+    alert(replynum);
+    if(confirm("댓글을 삭제하시겠습니까?") == true) {
+        var form = document.updateReplyForm;
+        var boardnum = form.boardnum.value;
+        var pageNum = form.pageNum.value;
+        var title = form.title.value;
+
+        form.setAttribute("replynum", replynum);
+        form.setAttribute("boardnum", boardnum);
+        form.setAttribute("pageNum", pageNum);
+        form.setAttribute("title", title);
+        form.action = "deleteReply";
+        form.method = "post";
+        form.submit();
+    }
+}
+
+function updateReply() {
+    var form = document.updateReplyForm;
+
 }

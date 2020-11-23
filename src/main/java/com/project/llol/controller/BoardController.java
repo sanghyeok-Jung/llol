@@ -2,7 +2,9 @@ package com.project.llol.controller;
 
 import com.project.llol.dto.BoardDTO;
 import com.project.llol.dto.MemberDTO;
+import com.project.llol.dto.ReplyDTO;
 import com.project.llol.service.BoardService;
+import com.project.llol.service.ReplyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,8 @@ import java.util.List;
 public class BoardController {
     @Autowired
     private BoardService boardService;
+    @Autowired
+    private ReplyService replyService;
 
     // 파일 업로드 경로 지정 (임시 경로와 실제 업로드 경로를 동일하게 설정)
     @Value("${spring.servlet.multipart.location}")
@@ -139,9 +143,12 @@ public class BoardController {
         board.setBoardnum(boardnum);
         board = boardService.getBoard(board);
 
+        List<ReplyDTO> replyList = replyService.getReplyList(boardnum);
+
         model.addAttribute("board", board);
         model.addAttribute("pageNum", pageNum);
         model.addAttribute("title", title);
+        model.addAttribute("replyList", replyList);
         return "getBoard";
     }
 
