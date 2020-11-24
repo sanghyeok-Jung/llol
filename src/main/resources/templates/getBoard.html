@@ -12,6 +12,13 @@
     <link rel="stylesheet" src="css/llol.css">
     <!-- javascript -->
     <script src="js/llol.js"></script>
+    <!-- textarea autosize jquery library -->
+    <script src="https://rawgit.com/jackmoore/autosize/master/dist/autosize.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            autosize($("textArea"));
+        });
+    </script>
 </head>
 <body style = "background-color: #ebf5ee">
     <header th:include = "common/header.html"></header>
@@ -51,36 +58,37 @@
                 <input type="hidden" name="pageNum" th:value="${pageNum}">
                 <input type="hidden" name="title" th:value="${title}">
                 <input type="hidden" name="replynum" value="0">
+                <input type="hidden" name="replycontent" value="">
                 <th:blcok th:each="reply : ${replyList}">
-                    <table>
+                    <table border = "1px solid gray">
                         <tr>
-                            <td>
+                            <td style="background-color: coral">
                                 <span style="font-weight: bold" th:text="${reply.replywriter}"></span>
                                 <th:block th:if="${session.user.id == reply.replywriter}">
                                     <input type="button" style="float: right; margin-left: 3px" th:onClick="deleteReply([[${reply.replynum}]])" value="삭제">
                                     <input type="button" style="float: right; margin-left: 3px" th:onClick="updateReply([[${reply.replynum}]])" value="수정">
                                 </th:block>
-                                <span style="float: right" th:text="|[${#dates.format(reply.replydate, 'yyyy-MM-dd')}]|"></span>
+                                &nbsp;<span th:text="|[${#dates.format(reply.replydate, 'yyyy-MM-dd')}]|"></span>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <textarea name="replycontent" th:id = "${reply.replynum}" readonly th:text="${reply.replycontent}" style = "background-color: transparent; border: none; resize: none"></textarea>
+                                <textarea cols="60%" name="v_replycontent" th:id = "${reply.replynum}" readOnly th:text="${reply.replycontent}" style = "background-color: transparent; border: none; resize: none"></textarea>
                             </td>
                         </tr>
                     </table>
                 </th:blcok>
             </form>
         </th:block>
-        <form name="insertReplyForm" action="insertReply" method="post" style = "width: 60%; margin-right: auto; margin-left: auto">
+        <form name="insertReplyForm" style = "width: 60%; margin-right: auto; margin-left: auto">
             <input type="hidden" name="boardnum" th:value="${board.boardnum}">
             <input type="hidden" name="pageNum" th:value="${pageNum}">
             <input type="hidden" name="title" th:value="${title}">
             <table border = "1px">
                 <tr>
-                    <td>
+                    <td style="background-color: darksalmon;">
                         <span style="font-weight: bold">댓글</span>
-                        <input type="submit" value="댓글 등록" style="float: right">
+                        <input type="button" value="댓글 등록" style="float: right" onClick="insertReply()">
                     </td>
                 </tr>
                 <tr>

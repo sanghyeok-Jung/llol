@@ -198,8 +198,6 @@ function insertBoard() {
 
 function deleteBoard() {
     var form = document.boardForm;
-    var boardnum = form.boardnum.value;
-    var boardwriter = form.boardwriter.value;
 
     if(confirm("정말 삭제하시겠습니까?") == true) {
         form.method = "post";
@@ -210,8 +208,6 @@ function deleteBoard() {
 
 function updateBoardView() {
     var form = document.boardForm;
-    var boardnum = form.boardnum.value;
-    var boardwriter = form.boardwriter.value;
 
     form.method = "post";
     form.action = "updateBoardView";
@@ -246,12 +242,21 @@ function updateBoard() {
     }
 }
 
+function insertReply() {
+    var form = document.insertReplyForm;
+    var replycontent = form.replycontent.value;
+    if(replycontent == "") {
+        alert("댓글은 공백일 수 없습니다.");
+    } else {
+        form.action = "insertReply";
+        form.method = "post";
+        form.submit();
+    }
+}
+
 function deleteReply(v_replynum) {
     if(confirm("댓글을 삭제하시겠습니까?") == true) {
         var form = document.updateReplyForm;
-        var boardnum = form.boardnum.value;
-        var pageNum = form.pageNum.value;
-        var title = form.title.value;
         var replynum = form.replynum;
         replynum.value = v_replynum;
 
@@ -261,7 +266,35 @@ function deleteReply(v_replynum) {
     }
 }
 
-function updateReply() {
+function updateReply(v_replynum) {
     var form = document.updateReplyForm;
+    var replynum = form.replynum;
+    replynum.value = v_replynum;
+    var replycontent = form.replycontent;
 
+    var id_replycontent = $("#" + v_replynum);
+
+    if(id_replycontent.prop("readOnly") == true) {
+        form.reset();
+        var replyList = form.v_replycontent;
+        for(let i = 0; i < replyList.length; ++i) {
+            replyList[i].readOnly = true;
+            replyList[i].style.backgroundColor =  "transparent";
+            replyList[i].style.border = "none";
+        }
+
+        id_replycontent.attr("readOnly", false);
+        id_replycontent.css("background-color", "white");
+        id_replycontent.css("border", "1px solid black");
+        id_replycontent.focus();
+    } else {
+        if(id_replycontent.val() == "") {
+            alert("댓글은 공백일 수 없습니다.");
+        } else {
+            replycontent.value = id_replycontent.val();
+            form.action = "updateReply";
+            form.method = "post";
+            form.submit();
+        }
+    }
 }

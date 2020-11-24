@@ -35,4 +35,18 @@ public class ReplyController {
         replyService.deleteReply(replynum);
         return "redirect:getBoard?boardnum=" + boardnum + "&pageNum=" + pageNum + "&title=" + title;
     }
+
+    @RequestMapping(value = "/updateReply", method = RequestMethod.POST)
+    public String updateReply(@RequestParam(value = "boardnum") int boardnum,
+                              @RequestParam(value = "replynum") int replynum,
+                              @RequestParam(value = "replycontent") String replycontent,
+                              @RequestParam(value = "pageNum", required = false, defaultValue = "1") int pageNum,
+                              @RequestParam(value = "title", required = false, defaultValue = "") String title) {
+        ReplyDTO reply = new ReplyDTO();
+        reply.setReplynum(replynum);
+        reply.setReplycontent(replycontent);
+        replyService.updateReply(reply);
+
+        return "redirect:getBoard?boardnum=" + boardnum + "&pageNum=" + pageNum + "&title=" + title;
+    }
 }
