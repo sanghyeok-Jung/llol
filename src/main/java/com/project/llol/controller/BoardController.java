@@ -11,6 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
@@ -133,14 +137,43 @@ public class BoardController {
     }
 
     @RequestMapping(value = "/getBoard", method = RequestMethod.GET)
-    public String getBoard(HttpSession session, Model model, @RequestParam(value = "boardnum") int boardnum, @RequestParam(value = "pageNum", required = false, defaultValue = "1") int pageNum, @RequestParam(value = "title", defaultValue = "") String title) {
+    public String getBoard(HttpServletRequest request, HttpServletResponse response, HttpSession session, Model model, @RequestParam(value = "boardnum") int boardnum, @RequestParam(value = "pageNum", required = false, defaultValue = "1") int pageNum, @RequestParam(value = "title", defaultValue = "") String title) {
         MemberDTO user = (MemberDTO)session.getAttribute("user");
         if(user == null) {
             return "redirect:loginView";
         }
 
+        // 전체 쿠키 목록을 가져옴
+        Cookie[] cookies = request.getCookies();
+        // 동일한 값을 가지는 쿠키가 있는지 확인하기 위한 체크용
+        boolean checkCookie = false;
+        if(cookies != null) {
+            for(Cookie c : cookies) {
+                if(c.getValue().equals(Integer.toString(boardnum))) {
+                    checkCookie = true;
+                }
+            }
+            // 쿠키 전체를 조회했는데도 일치하는 값이 없었으면, 회원 데이터를 쿠키에 저장
+            if(!checkCookie) {
+                Cookie cookie = new Cookie("boardnum", Integer.toString(boardnum));
+                cookie.setMaxAge(60*60*24*1);
+                response.addCookie(cookie);
+            }
+        } else {
+            // 쿠키가 아예 없어도 회원데이터를 쿠키에 저장
+            Cookie cookie = new Cookie("id", user.getId());
+            cookie.setMaxAge(60*60*24*1);
+            response.addCookie(cookie);
+        }
+
         BoardDTO board = new BoardDTO();
         board.setBoardnum(boardnum);
+        // 쿠키 체크할 때 해당 값이 없었다면
+        // 조회 수 증가를 실행한다.
+        if(checkCookie == false) {
+            boardService.increaseVisitCount(board);
+        }
+        // 조회수가 증가한 게시글 데이터를 가져옴
         board = boardService.getBoard(board);
 
         List<ReplyDTO> replyList = replyService.getReplyList(boardnum);
