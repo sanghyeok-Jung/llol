@@ -203,8 +203,6 @@ function deleteBoard() {
 
     if(confirm("정말 삭제하시겠습니까?") == true) {
         form.method = "post";
-        form.setAttribute("boardnum", boardnum);
-        form.setAttribute("boardwriter", boardwriter);
         form.action = "deleteBoard";
         form.submit();
     }
@@ -216,8 +214,6 @@ function updateBoardView() {
     var boardwriter = form.boardwriter.value;
 
     form.method = "post";
-    form.setAttribute("boardnum", boardnum);
-    form.setAttribute("boardwriter", boardwriter);
     form.action = "updateBoardView";
     form.submit();
 }
@@ -250,18 +246,15 @@ function updateBoard() {
     }
 }
 
-function deleteReply(replynum) {
-    alert(replynum);
+function deleteReply(v_replynum) {
     if(confirm("댓글을 삭제하시겠습니까?") == true) {
         var form = document.updateReplyForm;
         var boardnum = form.boardnum.value;
         var pageNum = form.pageNum.value;
         var title = form.title.value;
+        var replynum = form.replynum;
+        replynum.value = v_replynum;
 
-        form.setAttribute("replynum", replynum);
-        form.setAttribute("boardnum", boardnum);
-        form.setAttribute("pageNum", pageNum);
-        form.setAttribute("title", title);
         form.action = "deleteReply";
         form.method = "post";
         form.submit();

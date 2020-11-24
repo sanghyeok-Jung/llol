@@ -58,14 +58,14 @@
                                 <span style="font-weight: bold" th:text="${reply.replywriter}"></span>
                                 <th:block th:if="${session.user.id == reply.replywriter}">
                                     <input type="button" style="float: right; margin-left: 3px" th:onClick="deleteReply([[${reply.replynum}]])" value="삭제">
-                                    <input type="button" style="float: right; margin-left: 3px" th:onClick="updateReply(reply.replynum)" value="수정">
+                                    <input type="button" style="float: right; margin-left: 3px" th:onClick="updateReply([[${reply.replynum}]])" value="수정">
                                 </th:block>
                                 <span style="float: right" th:text="|[${#dates.format(reply.replydate, 'yyyy-MM-dd')}]|"></span>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <textarea name="replycontent" readonly th:text="${reply.replycontent}" style = "background-color: transparent; border: none; resize: none"></textarea>
+                                <textarea name="replycontent" th:id = "${reply.replynum}" readonly th:text="${reply.replycontent}" style = "background-color: transparent; border: none; resize: none"></textarea>
                             </td>
                         </tr>
                     </table>
