@@ -6,7 +6,6 @@ import com.project.llol.dto.ChampionDTO;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,9 +23,6 @@ import java.util.Set;
 
 @Controller
 public class ChampionController {
-    @Value("${RIOT_API_KEY}")
-    private String API_KEY;
-
     @RequestMapping(value = "/championList", method = RequestMethod.GET)
     public String championList(Model model, @RequestParam(value = "name", required = false, defaultValue = "") String name) {
         // champions에 json 파일의 string 값을 가져옴
