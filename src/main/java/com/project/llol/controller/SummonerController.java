@@ -123,7 +123,7 @@ public class SummonerController {
         BufferedReader in_championList = null;
         String champions = null;
         try {
-            URL requestUrl_championList = new URL("http://ddragon.leagueoflegends.com/cdn/10.23.1/data/en_US/champion.json");
+            URL requestUrl_championList = new URL("http://ddragon.leagueoflegends.com/cdn/10.24.1/data/en_US/champion.json");
             HttpURLConnection con_championList = (HttpURLConnection)requestUrl_championList.openConnection();
 
             // 챔피언 key값을 가지고 있는 데이터 스트링 확보
@@ -142,7 +142,7 @@ public class SummonerController {
         BufferedReader in_championList_kr = null;
         String champions_kr = null;
         try {
-            URL requestUrl_championList_kr = new URL("http://ddragon.leagueoflegends.com/cdn/10.23.1/data/ko_KR/champion.json");
+            URL requestUrl_championList_kr = new URL("http://ddragon.leagueoflegends.com/cdn/10.24.1/data/ko_KR/champion.json");
             HttpURLConnection con_championList_kr = (HttpURLConnection)requestUrl_championList_kr.openConnection();
 
             // 챔피언 key값을 가지고 있는 데이터 스트링 확보
