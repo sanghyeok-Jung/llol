@@ -34,7 +34,7 @@
                     <tr>
                 </th:block>
                 <td>
-                    <img th:src="|@{http://ddragon.leagueoflegends.com/cdn/10.24.1/img/champion/}${champion.id}@{.png}|" style = "width:100px; height: 100px;">
+                    <img th:src="|@{http://ddragon.leagueoflegends.com/cdn/10.24.1/img/champion/}${champion.id}@{.png}|" style = "width:100px; height: 100px" th:title = "${champion.name}">
                 </td>
                 <th:block th:if="${count.count % 5 == 0}">
                     </tr>
