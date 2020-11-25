@@ -77,7 +77,7 @@ public class ChampionController {
                     championList.add(champion);
                 } else {
                     // 챔피언 이름을 검색했을 경우
-                    // 현재 champion 객체에 저장된 Name 값에 검색어가 포함되어 있는지 확인한다.
+                    // 현재 champion 객체에 저장된 name 값에 검색어가 포함되어 있는지 확인한다.
                     if(champion.getName().indexOf(name) != -1) {
                         championList.add(champion);
                     }
