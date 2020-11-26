@@ -16,15 +16,12 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 public class ChampionController {
     @RequestMapping(value = "/championList", method = RequestMethod.GET)
-    public String championList(Model model, @RequestParam(value = "name", required = false, defaultValue = "") String name) {
+    public String championList(Model model, @RequestParam(value = "name", required = false, defaultValue = "") String name, @RequestParam(value = "championInfo", required = false, defaultValue = "") String championInfo) {
         // champions에 json 파일의 string 값을 가져옴
         BufferedReader in = null;
         String champions = null;
@@ -82,11 +79,23 @@ public class ChampionController {
                         championList.add(champion);
                     }
                 }
+                // 이미지를 클릭한 챔피언 정보를 반환
+                if(championInfo.equals(champion.getName())) {
+                    model.addAttribute("championInfo", champion);
+                }
             }
         }
         if(championList.size() == 0) {
             championList = null;
+        } else {
+            championList.sort(new Comparator<ChampionDTO>() {
+                @Override
+                public int compare(ChampionDTO o1, ChampionDTO o2) {
+                    return o1.getName().compareTo(o2.getName());
+                }
+            });
         }
+
         model.addAttribute("championList", championList);
         return "championList";
     }
