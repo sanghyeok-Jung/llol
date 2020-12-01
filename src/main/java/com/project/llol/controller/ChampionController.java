@@ -103,19 +103,22 @@ public class ChampionController {
                         if(in != null) try { in.close(); } catch(Exception e) { e.printStackTrace(); }
                     }
 
-                    // 챔피언 상세 정보
+                    // 챔피언 스킬 정보
                     List<ChampionSpellsDTO> spell_list = null;
                     ChampionPassiveDTO passive = null;
                     try {
+                        // 위에서 가져온 특정 챔피언의 json String을 jsonObject로 변환
                         JSONObject championDetail = (JSONObject)jsonParser.parse(str_championDetail);
+                        // jsonObject 내의 data 키에 해당하는 데이터 영역만 거르는 작업
                         championDetail = (JSONObject)championDetail.get("data");
+                        // 챔피언의 id 값이 키로 사용되기 때문에, 해당 키를 가지는 챔피언의 데이터 영역만 추가로 걸러내는 작업
                         championDetail = (JSONObject)championDetail.get(champion.getId());
 
-                        JSONArray spells = (JSONArray)championDetail.get("spells");
+                        // passive 항목은 spells가 아닌 다른 항목에 존재하여 따로 변환
                         JSONObject json_passive = (JSONObject)championDetail.get("passive");
-
                         passive = new ChampionPassiveDTO();
                         try{
+                            // 패시브 스킬 관련 데이터 저장
                             passive.setImage(mapper.readValue(json_passive.get("image").toString(), ChampionImageDTO.class));
                             passive.setName(json_passive.get("name").toString());
                             passive.setDescription(json_passive.get("description").toString());
@@ -123,9 +126,13 @@ public class ChampionController {
                             e.printStackTrace();
                         }
 
+                        // 챔피언 데이터 내부에 spells 항목은 array로 되어있어서 JSONArray로 대입
+                        JSONArray spells = (JSONArray)championDetail.get("spells");
+
                         Iterator it = spells.iterator();
                         spell_list = new ArrayList<ChampionSpellsDTO>();
                         ChampionSpellsDTO championSpell = null;
+                        // 액티브 스킬을 하나씩 배열에 저장하기 위한 반복문
                         while(it.hasNext()) {
                             JSONObject spell = (JSONObject)it.next();
                             championSpell = new ChampionSpellsDTO();
@@ -150,7 +157,6 @@ public class ChampionController {
                     model.addAttribute("championInfo", champion);
                     model.addAttribute("passive", passive);
                     model.addAttribute("spell_list", spell_list);
-                    // model.addAttribute("championSpell", championSpell);
                 }
             }
         }
