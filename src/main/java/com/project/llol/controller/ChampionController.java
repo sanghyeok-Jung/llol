@@ -3,6 +3,10 @@ package com.project.llol.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.llol.dto.ChampionDTO;
+import com.project.llol.dto.ChampionImageDTO;
+import com.project.llol.dto.ChampionPassiveDTO;
+import com.project.llol.dto.ChampionSpellsDTO;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -81,7 +85,72 @@ public class ChampionController {
                 }
                 // 이미지를 클릭한 챔피언 정보를 반환
                 if(championInfo.equals(champion.getName())) {
+                    // champions에 json 파일의 string 값을 가져옴
+                    in = null;
+                    String str_championDetail = null;
+                    try {
+                        URL request_championDetail = new URL("http://ddragon.leagueoflegends.com/cdn/10.24.1/data/ko_KR/champion/" + champion.getId() + ".json");
+                        HttpURLConnection con_championDetail = (HttpURLConnection)request_championDetail.openConnection();
+
+                        // 챔피언 key값을 가지고 있는 데이터 스트링 확보
+                        in = new BufferedReader(new InputStreamReader(con_championDetail.getInputStream()));
+                        str_championDetail = in.readLine();
+
+                        con_championDetail.disconnect();
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if(in != null) try { in.close(); } catch(Exception e) { e.printStackTrace(); }
+                    }
+
+                    // 챔피언 상세 정보
+                    List<ChampionSpellsDTO> spell_list = null;
+                    ChampionPassiveDTO passive = null;
+                    try {
+                        JSONObject championDetail = (JSONObject)jsonParser.parse(str_championDetail);
+                        championDetail = (JSONObject)championDetail.get("data");
+                        championDetail = (JSONObject)championDetail.get(champion.getId());
+
+                        JSONArray spells = (JSONArray)championDetail.get("spells");
+                        JSONObject json_passive = (JSONObject)championDetail.get("passive");
+
+                        passive = new ChampionPassiveDTO();
+                        try{
+                            passive.setImage(mapper.readValue(json_passive.get("image").toString(), ChampionImageDTO.class));
+                            passive.setName(json_passive.get("name").toString());
+                            passive.setDescription(json_passive.get("description").toString());
+                        } catch(Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        Iterator it = spells.iterator();
+                        spell_list = new ArrayList<ChampionSpellsDTO>();
+                        ChampionSpellsDTO championSpell = null;
+                        while(it.hasNext()) {
+                            JSONObject spell = (JSONObject)it.next();
+                            championSpell = new ChampionSpellsDTO();
+                            try {
+                                championSpell.setImage(mapper.readValue(spell.get("image").toString(), ChampionImageDTO.class));
+                                championSpell.setName(spell.get("name").toString());
+                                championSpell.setDescription(spell.get("description").toString());
+                                championSpell.setCooldownBurn(spell.get("cooldownBurn").toString());
+                                championSpell.setCostBurn(spell.get("costBurn").toString());
+                            } catch(Exception e) {
+                                e.printStackTrace();
+                            }
+                            spell_list.add(championSpell);
+                        }
+
+                        // 챔피언 데이터에 있는 lore 칼럼이 스토리 전문이기 때문에 내용을 변경해줌
+                        champion.setBlurb(championDetail.get("lore").toString());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
                     model.addAttribute("championInfo", champion);
+                    model.addAttribute("passive", passive);
+                    model.addAttribute("spell_list", spell_list);
+                    // model.addAttribute("championSpell", championSpell);
                 }
             }
         }

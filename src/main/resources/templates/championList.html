@@ -56,8 +56,8 @@
         <thead class="thead-light">
             <tr class="table-warning">
                 <td colspan = "2" style = "text-align: center">
-                    <span style="font-size: 15px; font-weight: bold" th:text = "|${championInfo.title}|"></span>
-                    <span style="font-size: 18px; font-weight: bold" th:text = "|${championInfo.name}|"></span>
+                    <span style="font-size: 15px; font-weight: bold" th:utext = "|${championInfo.title}|"></span>
+                    <span style="font-size: 18px; font-weight: bold" th:utext = "|${championInfo.name}|"></span>
                 </td>
             </tr>
         </thead>
@@ -70,7 +70,7 @@
             <tr>
                 <th style = "width: 20%">스토리</th>
                 <td>
-                    <p th:text="${championInfo.blurb}"></p>
+                    <p th:utext="${championInfo.blurb}"></p>
                 </td>
             </tr>
             <tr>
@@ -179,18 +179,49 @@
                 </td>
             </tr>
             <tr>
-                <th>물리 방어</th>
+                <th>물리 방어력</th>
                 <td>
                     <p th:text="|${championInfo.stats.armor} (레벨업 시 ${championInfo.stats.armorperlevel} 증가)|"></p>
                 </td>
             </tr>
             <tr>
-                <th>마법 방어</th>
+                <th>마법 방어력</th>
                 <td>
                     <p th:text="|${championInfo.stats.spellblock} (레벨업 시 ${championInfo.stats.spellblockperlevel} 증가)|"></p>
                 </td>
             </tr>
         </tbody>
+    </table>
+    <br>
+    <table class="table" style="width: 45%; float: right" th:if = "${spell_list != null}">
+        <thead class="thead-light">
+        <tr class="table-warning">
+            <td colspan = "2" style = "text-align: center">
+                <span style="font-size: 15px; font-weight: bold">스킬</span>
+            </td>
+        </tr>
+        </thead>
+        <tr th:if="${passive != null}">
+            <td>
+                <img th:src = "|@{http://ddragon.leagueoflegends.com/cdn/10.24.1/img/passive/}${passive.image.full}|" style="width: 90px; height: 90px">
+            </td>
+            <td>
+                <span style="font-weight: bold; font-size: 12px">[패시브 스킬]</span>
+                <p th:utext="${passive.name}"></p>
+                <p th:utext="${passive.description}"></p>
+            </td>
+        </tr>
+        <tr th:each = "spell : ${spell_list}">
+            <td>
+                <img th:src = "|@{http://ddragon.leagueoflegends.com/cdn/10.24.1/img/spell/}${spell.image.full}|" style="width: 90px; height: 90px">
+            </td>
+            <td>
+                <p th:utext="${spell.name}"></p>
+                <p th:utext="${spell.description}"></p>
+                <p th:if="${championInfo.partype != '없음'}" th:utext="|${championInfo.partype} : ${spell.costBurn}|"></p>
+                <p th:utext="|쿨타임 : ${spell.cooldownBurn}초|"></p>
+            </td>
+        </tr>
     </table>
 </section>
 </body>
