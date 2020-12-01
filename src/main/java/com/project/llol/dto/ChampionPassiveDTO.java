@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ChampionPassiveDTO {
-    private ChampionImageDTO image;
+    private ImageDTO image;
     private String name;
     private String description;
 }

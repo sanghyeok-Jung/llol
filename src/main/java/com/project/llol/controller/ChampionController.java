@@ -3,7 +3,7 @@ package com.project.llol.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.llol.dto.ChampionDTO;
-import com.project.llol.dto.ChampionImageDTO;
+import com.project.llol.dto.ImageDTO;
 import com.project.llol.dto.ChampionPassiveDTO;
 import com.project.llol.dto.ChampionSpellsDTO;
 import org.json.simple.JSONArray;
@@ -119,7 +119,7 @@ public class ChampionController {
                         passive = new ChampionPassiveDTO();
                         try{
                             // 패시브 스킬 관련 데이터 저장
-                            passive.setImage(mapper.readValue(json_passive.get("image").toString(), ChampionImageDTO.class));
+                            passive.setImage(mapper.readValue(json_passive.get("image").toString(), ImageDTO.class));
                             passive.setName(json_passive.get("name").toString());
                             passive.setDescription(json_passive.get("description").toString());
                         } catch(Exception e) {
@@ -137,7 +137,7 @@ public class ChampionController {
                             JSONObject spell = (JSONObject)it.next();
                             championSpell = new ChampionSpellsDTO();
                             try {
-                                championSpell.setImage(mapper.readValue(spell.get("image").toString(), ChampionImageDTO.class));
+                                championSpell.setImage(mapper.readValue(spell.get("image").toString(), ImageDTO.class));
                                 championSpell.setName(spell.get("name").toString());
                                 championSpell.setDescription(spell.get("description").toString());
                                 championSpell.setCooldownBurn(spell.get("cooldownBurn").toString());

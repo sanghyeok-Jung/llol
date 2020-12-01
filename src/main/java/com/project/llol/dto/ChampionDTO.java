@@ -12,7 +12,7 @@ public class ChampionDTO {
     private String title;
     private String blurb; // 배경 스토리
 
-    private ChampionImageDTO image;
+    private ImageDTO image;
     private ChampionInfoDTO info;
 
     private String[] tags;

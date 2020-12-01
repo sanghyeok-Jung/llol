@@ -3,7 +3,7 @@ package com.project.llol.dto;
 import lombok.Data;
 
 @Data
-public class ChampionImageDTO {
+public class ImageDTO {
     private String full;
     private String sprite;
     private String group;
