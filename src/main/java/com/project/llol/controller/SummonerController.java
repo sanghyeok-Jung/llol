@@ -1,9 +1,11 @@
 package com.project.llol.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.llol.dto.ChampionMasteryDTO;
-import com.project.llol.dto.LeagueEntryDTO;
-import com.project.llol.dto.SummonerDTO;
+import com.project.llol.dto.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,9 +14,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.*;
 
 @Controller
 public class SummonerController {
@@ -326,6 +331,106 @@ public class SummonerController {
             }
         }
 
+        // 최근 경기 10건 조회
+        BufferedReader matchReader = null;
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObject = null;
+        ArrayList matchIdList = new ArrayList();
+        ArrayList matchList = new ArrayList();
+        MatchDTO match = null;
+
+        try {
+            URL matchListURL = new URL("https://kr.api.riotgames.com/lol/match/v4/matchlists/by-account/"+ summoner.getAccountId() +"?endIndex=10&api_key=" + API_KEY);
+            HttpURLConnection urlConnection = (HttpURLConnection)matchListURL.openConnection();
+            matchReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+            jsonObject = (JSONObject)jsonParser.parse(matchReader.readLine());
+            JSONArray matches = (JSONArray)jsonObject.get("matches");
+            Iterator it = matches.iterator();
+            while(it.hasNext()) {
+                jsonObject = (JSONObject)it.next();
+                matchIdList.add(jsonObject.get("gameId"));
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(matchReader != null) {
+                try {
+                    matchReader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        Iterator it = matchIdList.iterator();
+        int participantId = -1;
+        Map<Integer, String> images = new HashMap<Integer, String>();
+
+        while(it.hasNext()) {
+            try {
+                URL matchInfo = new URL("https://kr.api.riotgames.com/lol/match/v4/matches/" + it.next() + "?api_key=" + API_KEY);
+                HttpURLConnection matchConnection = (HttpURLConnection)matchInfo.openConnection();
+                matchReader = new BufferedReader(new InputStreamReader(matchConnection.getInputStream()));
+                match = new MatchDTO();
+                match = mapper.readValue(matchReader.readLine(), MatchDTO.class);
+
+                List<ParticipantIdentitiesDTO> userList = match.getParticipantIdentities();
+                for(int i = 0; i < userList.size(); ++i) {
+                    if(userList.get(i).getPlayer().getAccountId().equals(summoner.getAccountId())) {
+                        participantId = userList.get(i).getParticipantId();
+                        if(participantId >= 1 && participantId <= 5) {
+                            match.setTeams(Arrays.asList(match.getTeams().get(0)));
+                        } else {
+                            match.setTeams(Arrays.asList(match.getTeams().get(1)));
+                        }
+                        break;
+                    }
+                }
+
+                List<ParticipantsDTO> participantsList = match.getParticipants();
+                for(int i = 0; i < participantsList.size(); ++i) {
+                    if(participantId == participantsList.get(i).getParticipantId()) {
+                        match.setParticipants(Arrays.asList(match.getParticipants().get(i)));
+                        break;
+                    }
+                }
+
+                try {
+                    JSONObject json_champions = (JSONObject)jsonParser.parse(champions);
+                    json_champions = (JSONObject)json_champions.get("data");
+                    Set keySet = json_champions.keySet();
+                    Iterator it_champ = keySet.iterator();
+                    while(it_champ.hasNext()) {
+                        JSONObject obj = (JSONObject)json_champions.get(it_champ.next());
+                        if(match.getParticipants().get(0).getChampionId() == Integer.parseInt(obj.get("key").toString())) {
+                            images.put(match.getParticipants().get(0).getChampionId(), obj.get("id").toString());
+                            break;
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                matchList.add(match);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if(matchReader != null) {
+                    try {
+                        matchReader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        if(matchList.size() == 0) {
+            matchList = null;
+        }
+
+        model.addAttribute("images", images);
+        model.addAttribute("matchList", matchList);
         model.addAttribute("top1", top1);
         model.addAttribute("top1_name", top1_name);
         model.addAttribute("top1_name_kr", top1_name_kr);

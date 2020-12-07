@@ -69,7 +69,7 @@
             </tbody>
         </table>
 
-        <!-- 모스트 3 챔피언 정보 조 -->
+        <!-- 모스트 3 챔피언 정보 조회 -->
         <table class="table" style = "width: 90%; margin-left: auto; margin-right: auto">
             <thead>
             <tr class="table-active">
@@ -109,6 +109,47 @@
                     <th:block th:text = "|${top3.championLevel}레벨 (${top3.championPoints}점)|"></th:block>
                 </td>
             </tr>
+            </tbody>
+        </table>
+
+        <!-- 최근 전적 10건 -->
+        <table class="table" style = "width: 90%; margin-left: auto; margin-right: auto">
+            <thead>
+            <tr class="table-active">
+                <th style = "text-align: center">최근 경기(10건)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each = "match : ${matchList}">
+                <tr>
+                    <th:block th:each = "team : ${match.teams}">
+                        <th:block th:each = "participant : ${match.participants}">
+                            <td th:if="${team.win == 'Fail'}" style = "background-color: #ff85a1">
+                                <img th:src = "|@{http://ddragon.leagueoflegends.com/cdn/10.24.1/img/champion/}${images.get(participant.championId)}@{.png}|" style = "float: left; width: 100px; height: 100px">
+                                <br><span th:text = "|${participant.stats.kills}/${participant.stats.deaths}/${participant.stats.assists}|" style = "font-size: 30px"></span>
+                                <img th:if="${participant.stats.item6 != 0}" th:src="|@{http://ddragon.leagueoflegends.com/cdn/10.24.1/img/item/}${participant.stats.item6}@{.png}|" style = "width:50px; height: 50px; float: right">
+                                <img th:if="${participant.stats.item5 != 0}" th:src="|@{http://ddragon.leagueoflegends.com/cdn/10.24.1/img/item/}${participant.stats.item5}@{.png}|" style = "width:50px; height: 50px; float: right">
+                                <img th:if="${participant.stats.item4 != 0}" th:src="|@{http://ddragon.leagueoflegends.com/cdn/10.24.1/img/item/}${participant.stats.item4}@{.png}|" style = "width:50px; height: 50px; float: right">
+                                <img th:if="${participant.stats.item3 != 0}" th:src="|@{http://ddragon.leagueoflegends.com/cdn/10.24.1/img/item/}${participant.stats.item3}@{.png}|" style = "width:50px; height: 50px; float: right">
+                                <img th:if="${participant.stats.item2 != 0}" th:src="|@{http://ddragon.leagueoflegends.com/cdn/10.24.1/img/item/}${participant.stats.item2}@{.png}|" style = "width:50px; height: 50px; float: right">
+                                <img th:if="${participant.stats.item1 != 0}" th:src="|@{http://ddragon.leagueoflegends.com/cdn/10.24.1/img/item/}${participant.stats.item1}@{.png}|" style = "width:50px; height: 50px; float: right">
+                                <img th:if="${participant.stats.item0 != 0}" th:src="|@{http://ddragon.leagueoflegends.com/cdn/10.24.1/img/item/}${participant.stats.item0}@{.png}|" style = "width:50px; height: 50px; float: right">
+                            </td>
+                            <td th:if="${team.win == 'Win'}" style = "background-color: #85bcff">
+                                <img th:src = "|@{http://ddragon.leagueoflegends.com/cdn/10.24.1/img/champion/}${images.get(participant.championId)}@{.png}|" style = "float: left; width: 100px; height: 100px">
+                                <br><span th:text = "|${participant.stats.kills}/${participant.stats.deaths}/${participant.stats.assists}|" style = "font-size: 30px"></span>
+                                <img th:if="${participant.stats.item6 != 0}" th:src="|@{http://ddragon.leagueoflegends.com/cdn/10.24.1/img/item/}${participant.stats.item6}@{.png}|" style = "width:50px; height: 50px; float: right">
+                                <img th:if="${participant.stats.item5 != 0}" th:src="|@{http://ddragon.leagueoflegends.com/cdn/10.24.1/img/item/}${participant.stats.item5}@{.png}|" style = "width:50px; height: 50px; float: right">
+                                <img th:if="${participant.stats.item4 != 0}" th:src="|@{http://ddragon.leagueoflegends.com/cdn/10.24.1/img/item/}${participant.stats.item4}@{.png}|" style = "width:50px; height: 50px; float: right">
+                                <img th:if="${participant.stats.item3 != 0}" th:src="|@{http://ddragon.leagueoflegends.com/cdn/10.24.1/img/item/}${participant.stats.item3}@{.png}|" style = "width:50px; height: 50px; float: right">
+                                <img th:if="${participant.stats.item2 != 0}" th:src="|@{http://ddragon.leagueoflegends.com/cdn/10.24.1/img/item/}${participant.stats.item2}@{.png}|" style = "width:50px; height: 50px; float: right">
+                                <img th:if="${participant.stats.item1 != 0}" th:src="|@{http://ddragon.leagueoflegends.com/cdn/10.24.1/img/item/}${participant.stats.item1}@{.png}|" style = "width:50px; height: 50px; float: right">
+                                <img th:if="${participant.stats.item0 != 0}" th:src="|@{http://ddragon.leagueoflegends.com/cdn/10.24.1/img/item/}${participant.stats.item0}@{.png}|" style = "width:50px; height: 50px; float: right">
+                            </td>
+                        </th:block>
+                    </th:block>
+                </tr>
+            </th:block>
             </tbody>
         </table>
     </section>
