@@ -105,7 +105,7 @@ function signUp() {
             success: function (data) {
                 // 메소드에서 처리한 결과 값이 1이 이상인 경우
                 // 아이디가 있는 경우
-                if (data > 1) {
+                if (data > 0) {
                     // 안내 텍스트를 출력할 영역들에 대한 텍스트 내용 초기화
                     $("#checkResultId").text("이미 사용중인 아이디입니다.");
                     $("#checkResultPassword1").text("");
