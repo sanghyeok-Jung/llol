@@ -41,7 +41,7 @@
                 <span th:text="|[조회수 : ${board.boardvisit}]|" style="font-size: 12px; float: right"></span>
             </div>
             <div class="form-group">
-                <p th:text="${board.boardcontent}"></p>
+                <textarea style = "background-color: transparent; border: none; resize: none; width: 100%" disabled th:utext="${board.boardcontent}"></textarea>
             </div>
             <div class="form-group" th:if="${board.boardimage != ''}">
                 <img style = "max-width: 100%" th:src="|@{upload/}${board.boardimage}|">
@@ -64,7 +64,7 @@
                     <th:block th:each="reply : ${replyList}">
                         <table border = "1px solid gray" style="width: 100%">
                             <tr>
-                                <td style="background-color: coral">
+                                <td style="background-color: #b9c0c9">
                                     <span style="font-weight: bold" th:text="${reply.replywriter}"></span>
                                     <th:block th:if="${session.user.id == reply.replywriter}">
                                         <input type="button" style="float: right; margin-left: 3px" th:onClick="deleteReply([[${reply.replynum}]])" value="삭제">
@@ -90,7 +90,7 @@
                 <input type="hidden" name="title" th:value="${title}">
                 <table border = "1px" style="width: 100%">
                     <tr>
-                        <td style="background-color: darksalmon;">
+                        <td style="background-color: #b9c0c9;">
                             <span style="font-weight: bold">댓글</span>
                             <input type="button" value="댓글 등록" style="float: right" onClick="insertReply()">
                         </td>
